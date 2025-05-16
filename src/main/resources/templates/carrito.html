@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/}" href="/">Pixel Play</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/}" href="/">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/buscar_juegos}" href="/buscar_juegos">Juegos</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Administrar
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                            <li><a class="dropdown-item" th:href="@{/productos}" href="/productos">Productos</a></li>
+                            <li><a class="dropdown-item" th:href="@{/usuarios}" href="/usuarios">Usuarios</a></li>
+                            <li><a class="dropdown-item" th:href="@{/compras}" href="/compras">Compras</a></li>
+                            <li><a class="dropdown-item" th:href="@{/graficos}" href="/graficos">Gráficos</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/carrito}" href="/carrito">Carrito</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <h1 class="text-center">Carrito de Compras</h1>
+        <div id="cartItems" class="my-4">
+        </div>
+        <div class="text-end">
+            <h4>Total: $<span id="cartTotal">0.00</span></h4>
+            <button class="btn btn-success" id="checkoutButton">Proceder al Pago</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            const navbar = document.querySelector('.navbar-nav');
+
+            if (loggedInUser) {
+                navbar.innerHTML = '';
+
+                const homeLink = document.createElement('li');
+                homeLink.classList.add('nav-item');
+                homeLink.innerHTML = '<a class="nav-link" href="/">Inicio</a>';
+                navbar.appendChild(homeLink);
+
+                const juegosLink = document.createElement('li');
+                juegosLink.classList.add('nav-item');
+                juegosLink.innerHTML = '<a class="nav-link" href="/buscar_juegos">Juegos</a>';
+                navbar.appendChild(juegosLink);
+
+                const adminDropdown = document.createElement('li');
+                adminDropdown.classList.add('nav-item', 'dropdown');
+                adminDropdown.innerHTML = `
+                    <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Administrar
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                        <li><a class="dropdown-item" href="/productos">Productos</a></li>
+                        <li><a class="dropdown-item" href="/usuarios">Usuarios</a></li>
+                        <li><a class="dropdown-item" href="/compras">Compras</a></li>
+                        <li><a class="dropdown-item" href="/graficos">Gráficos</a></li>
+                    </ul>
+                `;
+                navbar.appendChild(adminDropdown);
+
+                const cartIcon = document.createElement('li');
+                cartIcon.classList.add('nav-item');
+                cartIcon.innerHTML = '<a class="nav-link" href="/carrito">Carrito</a>';
+                navbar.appendChild(cartIcon);
+
+                const userGreeting = document.createElement('li');
+                userGreeting.classList.add('nav-item');
+                userGreeting.innerHTML = `<span class="nav-link">Bienvenido, ${loggedInUser}</span>`;
+                navbar.appendChild(userGreeting);
+
+                const logoutButton = document.createElement('li');
+                logoutButton.classList.add('nav-item');
+                logoutButton.innerHTML = '<a class="nav-link" href="#" id="logoutButton">Cerrar Sesión</a>';
+                navbar.appendChild(logoutButton);
+
+                document.getElementById('logoutButton').addEventListener('click', () => {
+                    localStorage.removeItem('loggedInUser');
+                    alert('Has cerrado sesión.');
+                    window.location.href = '/';
+                });
+            }
+        });
+
+        const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+        const cartContainer = document.getElementById('cartItems');
+        const cartTotal = document.getElementById('cartTotal');
+
+        function renderCart() {
+            cartContainer.innerHTML = '';
+            let total = 0;
+
+            cartItems.forEach((item, index) => {
+                if (!item.id) {
+                    item.id = index + 1;
+                }
+
+                const itemElement = document.createElement('div');
+                itemElement.classList.add('card', 'mb-3');
+                itemElement.innerHTML = `
+                    <div class="card-body">
+                        <h5 class="card-title">${item.name}</h5>
+                        <p class="card-text">Precio: $${item.price}</p>
+                        <button class="btn btn-danger" onclick="removeFromCart(${index})">Eliminar</button>
+                    </div>
+                `;
+                cartContainer.appendChild(itemElement);
+                total += item.price;
+            });
+
+            cartTotal.textContent = total.toFixed(2);
+            localStorage.setItem('cart', JSON.stringify(cartItems));
+        }
+
+        function removeFromCart(index) {
+            cartItems.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cartItems));
+            renderCart();
+        }
+
+        function savePurchaseToHistory(purchase) {
+            let history = JSON.parse(localStorage.getItem('purchaseHistory')) || [];
+            history.push({
+                date: new Date().toLocaleString(),
+                items: purchase
+            });
+            localStorage.setItem('purchaseHistory', JSON.stringify(history));
+        }
+
+        document.getElementById('checkoutButton').addEventListener('click', () => {
+            if (cartItems.length === 0) {
+                alert('El carrito está vacío.');
+                return;
+            }
+
+            alert('Procesando el pago...');
+            setTimeout(() => {
+                alert('Pago procesado con éxito');
+                savePurchaseToHistory([...cartItems]);
+                localStorage.removeItem('cart');
+                renderCart();
+                window.location.href = '/compras';
+            }, 1000);
+        });
+
+        renderCart();
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            const comprasMenu = document.querySelector('a[href="/compras"]')?.parentElement;
+            if (comprasMenu) {
+                comprasMenu.style.display = loggedInUser ? '' : 'none';
+            }
+        });
+    </script>
+
+</body>
+<!--Observaciones de otros grupos-->
+<!-- Crear la pasarela de pago del carrito, tambien tratar de cambiar un poco la estetica para que sea mas intuitiva y amigable-->
+</html>

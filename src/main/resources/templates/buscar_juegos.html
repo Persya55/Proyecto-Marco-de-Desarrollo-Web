@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Juegos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <video autoplay loop muted playsinline class="video-background">
+        <source src="elementos/fondo.mp4" type="video/mp4">
+        Tu navegador no soporta la reproducción de videos.
+    </video>
+    
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/}" href="/">Pixel Play</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/}" href="/">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/buscar_juegos}" href="/buscar_juegos">Juegos</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Administrar
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                            <li><a class="dropdown-item" th:href="@{/productos}" href="/productos">Productos</a></li>
+                            <li><a class="dropdown-item" th:href="@{/usuarios}" href="/usuarios">Usuarios</a></li>
+                            <li><a class="dropdown-item" th:href="@{/compras}" href="/compras">Compras</a></li>
+                            <li><a class="dropdown-item" th:href="@{/graficos}" href="/graficos">Gráficos</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Iniciar Sesión</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <h1 class="text-center">Buscar Juegos</h1>
+        <div class="d-flex align-items-center">
+            <div class="input-group me-3">
+                <input type="text" class="form-control" placeholder="Buscar juegos..." aria-label="Buscar juegos" aria-describedby="button-addon2">
+                <button class="btn btn-primary" type="button" id="button-addon2">Buscar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4" th:each="producto : ${productos}">
+                <div class="card mb-4">
+                    <img th:src="${producto.imagenUrl != null ? producto.imagenUrl : 'https://via.placeholder.com/300x200?text=Sin+Imagen'}" class="card-img-top" alt="Imagen producto">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${producto.nombre}"></h5>
+                        <span th:each="cat : ${producto.categorias}">
+                            <span th:if="${cat} == 'RPG'" class="badge bg-secondary me-1" th:text="${cat}"></span>
+                            <span th:if="${cat} == 'PlayStation'" class="badge bg-primary me-1" th:text="${cat}"></span>
+                            <span th:if="${cat} == 'Aventura'" class="badge bg-success me-1" th:text="${cat}"></span>
+                            <span th:if="${cat} == 'PC'" class="badge bg-dark me-1" th:text="${cat}"></span>
+                            <span th:if="${cat} == 'Lucha'" class="badge bg-info me-1" th:text="${cat}"></span>
+                            <span th:if="${cat} == 'Plataformas'" class="badge bg-warning text-dark me-1" th:text="${cat}"></span>
+                            <span th:if="${cat} == 'Nintendo'" class="badge bg-danger me-1" th:text="${cat}"></span>
+                            <span th:if="${cat} == 'Roguelike'" class="badge bg-dark me-1" th:text="${cat}"></span>
+                            <span th:if="${cat} != 'RPG' and ${cat} != 'PlayStation' and ${cat} != 'Aventura' and ${cat} != 'PC' and ${cat} != 'Lucha' and ${cat} != 'Plataformas' and ${cat} != 'Nintendo' and ${cat} != 'Roguelike'" class="badge bg-secondary me-1" th:text="${cat}"></span>
+                        </span>
+                        <p class="card-text">Precio: $<span th:text="${producto.precio}"></span></p>
+                        <form th:action="@{'/productos/' + ${producto.id}}" method="get" style="display:inline;">
+                            <button type="submit" class="btn btn-primary btn-sm">Ver detalle</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Iniciar Sesión</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form onsubmit="handleLogin(event)">
+                        <div class="mb-3">
+                            <label for="loginUsername" class="form-label">Usuario</label>
+                            <input type="text" class="form-control" id="loginUsername" placeholder="Tu Usuario">
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="loginPassword" placeholder="Contraseña">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                    </form>
+                    <div class="mt-3 text-center">
+                        <p>¿No tienes una cuenta? <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Regístrate aquí</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerModalLabel">Registrarse</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="registerUsername" class="form-label">Usuario</label>
+                            <input type="text" class="form-control" id="registerUsername" placeholder="Usuario">
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerName" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="registerName" placeholder="Nombre Completo">
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerEmail" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="registerEmail" placeholder="nombre@ejemplo.com">
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPassword" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="registerPassword" placeholder="Contraseña">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Registrarse</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (username && password) {
+                fetch(`/api/usuarios/rol?usuario=${encodeURIComponent(username)}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        localStorage.setItem('loggedInUser', username);
+                        localStorage.setItem('admin', data.admin ? 'true' : 'false');
+                        alert(`Bienvenido, ${username}!`);
+                        location.reload();
+                    })
+                    .catch(() => {
+                        localStorage.setItem('loggedInUser', username);
+                        localStorage.setItem('admin', 'false');
+                        alert(`Bienvenido, ${username}!`);
+                        location.reload();
+                    });
+            } else {
+                alert('Por favor, completa todos los campos.');
+            }
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            const navbar = document.querySelector('.navbar-nav');
+
+            if (loggedInUser) {
+                navbar.innerHTML = '';
+
+                const homeLink = document.createElement('li');
+                homeLink.classList.add('nav-item');
+                homeLink.innerHTML = '<a class="nav-link" href="/">Inicio</a>';
+                navbar.appendChild(homeLink);
+
+                const juegosLink = document.createElement('li');
+                juegosLink.classList.add('nav-item');
+                juegosLink.innerHTML = '<a class="nav-link" href="/buscar_juegos">Juegos</a>';
+                navbar.appendChild(juegosLink);
+
+                const cartIcon = document.createElement('li');
+                cartIcon.classList.add('nav-item');
+                cartIcon.innerHTML = '<a class="nav-link" href="/carrito">Carrito</a>';
+                navbar.appendChild(cartIcon);
+
+                const userGreeting = document.createElement('li');
+                userGreeting.classList.add('nav-item');
+                userGreeting.innerHTML = `<span class="nav-link">Bienvenido, ${loggedInUser}</span>`;
+                navbar.appendChild(userGreeting);
+
+                const logoutButton = document.createElement('li');
+                logoutButton.classList.add('nav-item');
+                logoutButton.innerHTML = '<a class="nav-link" href="#" id="logoutButton">Cerrar Sesión</a>';
+                navbar.appendChild(logoutButton);
+
+                document.getElementById('logoutButton').addEventListener('click', () => {
+                    localStorage.removeItem('loggedInUser');
+                    alert('Has cerrado sesión.');
+                    location.reload();
+                });
+            }
+        });
+    </script>
+    <script>
+            document.querySelector('.form-control').addEventListener('input', function () {
+                const searchQuery = this.value.toLowerCase();
+                const cards = document.querySelectorAll('.card');
+
+                cards.forEach(card => {
+                    const title = card.querySelector('.card-title').textContent.toLowerCase();
+                    const badges = Array.from(card.querySelectorAll('.badge')).map(badge => badge.textContent.toLowerCase());
+
+                    if (title.includes(searchQuery) || badges.some(badge => badge.includes(searchQuery))) {
+                        card.parentElement.style.display = 'block';
+                    } else {
+                        card.parentElement.style.display = 'none';
+                    }
+                });
+            });
+        </script>
+    <script>
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchQuery = urlParams.get('search');
+
+            if (searchQuery) {
+                const searchInput = document.querySelector('.form-control');
+                searchInput.value = searchQuery;
+
+                const cards = document.querySelectorAll('.card');
+                cards.forEach(card => {
+                    const title = card.querySelector('.card-title').textContent.toLowerCase();
+                    const badges = Array.from(card.querySelectorAll('.badge')).map(badge => badge.textContent.toLowerCase());
+
+                    if (title.includes(searchQuery.toLowerCase()) || badges.some(badge => badge.includes(searchQuery.toLowerCase()))) {
+                        card.parentElement.style.display = 'block';
+                    } else {
+                        card.parentElement.style.display = 'none';
+                    }
+                });
+            }
+        </script>
+    <script>
+        const registerForm = document.querySelector('#registerModal form');
+        if (registerForm) {
+            registerForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const usuario = document.getElementById('registerUsername').value;
+                const nombre = document.getElementById('registerName').value;
+                const email = document.getElementById('registerEmail').value;
+                const password = document.getElementById('registerPassword').value;
+                fetch('/registrarUsuario', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `usuario=${encodeURIComponent(usuario)}&nombre=${encodeURIComponent(nombre)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+                }).then(res => {
+                    if (res.ok) {
+                        alert('Usuario registrado correctamente.');
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
+                        if (modal) modal.hide();
+                    } else {
+                        alert('Error al registrar usuario.');
+                    }
+                });
+            });
+        }
+    </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const loggedInUser = localStorage.getItem('loggedInUser');
+        const comprasMenu = document.querySelector('a[href="/compras"]')?.parentElement;
+        if (comprasMenu) {
+            comprasMenu.style.display = loggedInUser ? '' : 'none';
+        }
+    });
+    </script>
+</body>
+</html>

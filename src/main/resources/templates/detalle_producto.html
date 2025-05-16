@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${producto.nombre}">Detalle del Producto</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%);
+            min-height: 100vh;
+            color: #222;
+        }
+        .card, .form-control, .form-select {
+            background-color: #f8f9fa !important;
+            color: #222 !important;
+        }
+        .card-title, .card-text, label, h2, h3, h4, .badge {
+            color: #222 !important;
+        }
+        .btn-primary {
+            background-color: #1976d2;
+            border-color: #1976d2;
+        }
+        .btn-primary:hover {
+            background-color: #1565c0;
+            border-color: #1565c0;
+        }
+        .navbar, .dropdown-menu {
+            background-color: #212529 !important;
+        }
+        .dropdown-item {
+            color: #fff !important;
+        }
+        .dropdown-item:hover {
+            background-color: #1976d2 !important;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/}" href="/">Pixel Play</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{/}" href="/">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/buscar_juegos}" href="/buscar_juegos">Juegos</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Administrar</a>
+                    <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                        <li><a class="dropdown-item" th:href="@{/productos}" href="/productos">Productos</a></li>
+                        <li><a class="dropdown-item" th:href="@{/usuarios}" href="/usuarios">Usuarios</a></li>
+                        <li><a class="dropdown-item" th:href="@{/compras}" href="/compras">Compras</a></li>
+                        <li><a class="dropdown-item" th:href="@{/graficos}" href="/graficos">Gráficos</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/carrito}" href="/carrito">Carrito</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Iniciar Sesión</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-6">
+            <img th:src="${producto.imagenUrl != null ? producto.imagenUrl : 'https://via.placeholder.com/300x200?text=Sin+Imagen'}" class="img-fluid" alt="Imagen producto">
+        </div>
+        <div class="col-md-6">
+            <h2 th:text="${producto.nombre}"></h2>
+            <div>
+                <span th:each="cat : ${producto.categorias}">
+                    <span th:if="${cat} == 'RPG'" class="badge bg-secondary me-1" th:text="${cat}"></span>
+                    <span th:if="${cat} == 'PlayStation'" class="badge bg-primary me-1" th:text="${cat}"></span>
+                    <span th:if="${cat} == 'Aventura'" class="badge bg-success me-1" th:text="${cat}"></span>
+                    <span th:if="${cat} == 'PC'" class="badge bg-dark me-1" th:text="${cat}"></span>
+                    <span th:if="${cat} == 'Lucha'" class="badge bg-info me-1" th:text="${cat}"></span>
+                    <span th:if="${cat} == 'Plataformas'" class="badge bg-warning text-dark me-1" th:text="${cat}"></span>
+                    <span th:if="${cat} == 'Nintendo'" class="badge bg-danger me-1" th:text="${cat}"></span>
+                    <span th:if="${cat} == 'Roguelike'" class="badge bg-dark me-1" th:text="${cat}"></span>
+                    <span th:if="${cat} != 'RPG' and ${cat} != 'PlayStation' and ${cat} != 'Aventura' and ${cat} != 'PC' and ${cat} != 'Lucha' and ${cat} != 'Plataformas' and ${cat} != 'Nintendo' and ${cat} != 'Roguelike'" class="badge bg-secondary me-1" th:text="${cat}"></span>
+                </span>
+            </div>
+            <p class="card-text">Precio: $<span th:text="${producto.precio}"></span></p>
+            <p th:if="${producto.stock > 0}">Stock: <span th:text="${producto.stock}"></span></p>
+            <p th:if="${producto.stock == 0}" class="text-danger">Sin stock</p>
+            <button class="btn btn-primary" id="buyButton" th:disabled="${producto.stock == 0}">Agregar al carrito</button>
+            <hr>
+            <h4>Calificación: ⭐⭐⭐⭐⭐</h4>
+            <p>Envío: Gratis</p>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <h3>Reseñas</h3>
+    <div th:if="${#lists.isEmpty(resenas)}" class="mb-3">Aún no hay reseñas para este producto.</div>
+    <div th:each="resena : ${resenas}" class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title" th:text="${resena.usuario}"></h5>
+            <p class="card-text" th:text="${resena.comentario}"></p>
+            <p class="card-text">Calificación:
+                <span th:each="i : ${#numbers.sequence(1, resena.calificacion)}">⭐</span>
+                <span th:each="i : ${#numbers.sequence(resena.calificacion+1, 5)}">☆</span>
+            </p>
+        </div>
+    </div>
+    <div class="mt-3">
+        <form th:action="@{'/productos/' + ${producto.id} + '/reseña'}" method="post">
+            <div class="mb-2">
+                <label for="comentario" class="form-label">Agrega una reseña:</label>
+                <textarea class="form-control" name="comentario" id="comentario" rows="2" required></textarea>
+            </div>
+            <div class="mb-2">
+                <label for="calificacion" class="form-label">Calificación:</label>
+                <select class="form-select" name="calificacion" id="calificacion" required>
+                    <option value="">Selecciona</option>
+                    <option value="1">1 estrella</option>
+                    <option value="2">2 estrellas</option>
+                    <option value="3">3 estrellas</option>
+                    <option value="4">4 estrellas</option>
+                    <option value="5">5 estrellas</option>
+                </select>
+            </div>
+            <div class="mb-2">
+                <label for="usuario" class="form-label">Tu nombre (opcional):</label>
+                <input type="text" class="form-control" name="usuario" id="usuario" placeholder="Anónimo">
+            </div>
+            <button type="submit" class="btn btn-success">Enviar reseña</button>
+        </form>
+    </div>
+</div>
+
+<div class="container my-5">
+    <h3>Juegos que te podrían interesar</h3>
+    <div class="row">
+        <div class="col-md-4" th:each="rel : ${relacionados}">
+            <div class="card mb-4">
+                <img th:src="${rel.imagenUrl != null ? rel.imagenUrl : 'https://via.placeholder.com/300x200?text=Sin+Imagen'}" class="card-img-top" alt="Imagen producto relacionado">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${rel.nombre}"></h5>
+                    <span th:each="cat : ${rel.categorias}">
+                        <span th:if="${cat} == 'RPG'" class="badge bg-secondary me-1" th:text="${cat}"></span>
+                        <span th:if="${cat} == 'PlayStation'" class="badge bg-primary me-1" th:text="${cat}"></span>
+                        <span th:if="${cat} == 'Aventura'" class="badge bg-success me-1" th:text="${cat}"></span>
+                        <span th:if="${cat} == 'PC'" class="badge bg-dark me-1" th:text="${cat}"></span>
+                        <span th:if="${cat} == 'Lucha'" class="badge bg-info me-1" th:text="${cat}"></span>
+                        <span th:if="${cat} == 'Plataformas'" class="badge bg-warning text-dark me-1" th:text="${cat}"></span>
+                        <span th:if="${cat} == 'Nintendo'" class="badge bg-danger me-1" th:text="${cat}"></span>
+                        <span th:if="${cat} == 'Roguelike'" class="badge bg-dark me-1" th:text="${cat}"></span>
+                        <span th:if="${cat} != 'RPG' and ${cat} != 'PlayStation' and ${cat} != 'Aventura' and ${cat} != 'PC' and ${cat} != 'Lucha' and ${cat} != 'Plataformas' and ${cat} != 'Nintendo' and ${cat} != 'Roguelike'" class="badge bg-secondary me-1" th:text="${cat}"></span>
+                    </span>
+                    <p class="card-text">Precio: $<span th:text="${rel.precio}"></span></p>
+                    <a th:href="@{'/productos/' + ${rel.id}}" class="btn btn-primary">Ver más</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">Iniciar Sesión</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="handleLogin(event)">
+                    <div class="mb-3">
+                        <label for="loginUsername" class="form-label">Usuario</label>
+                        <input type="text" class="form-control" id="loginUsername" placeholder="Tu Usuario">
+                    </div>
+                    <div class="mb-3">
+                        <label for="loginPassword" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="loginPassword" placeholder="Contraseña">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                </form>
+                <div class="mt-3 text-center">
+                    <p>¿No tienes una cuenta? <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Regístrate aquí</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="registerModalLabel">Registrarse</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="registerUsername" class="form-label">Usuario</label>
+                        <input type="text" class="form-control" id="registerUsername" placeholder="Usuario">
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerName" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="registerName" placeholder="Nombre Completo">
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerEmail" class="form-label">Correo Electrónico</label>
+                        <input type="email" class="form-control" id="registerEmail" placeholder="nombre@ejemplo.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerPassword" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="registerPassword" placeholder="Contraseña">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Registrarse</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const loggedInUser = localStorage.getItem('loggedInUser');
+        const comprasMenu = document.querySelector('a[href="/compras"]')?.parentElement;
+        if (comprasMenu) {
+            comprasMenu.style.display = loggedInUser ? '' : 'none';
+        }
+    });
+    function handleLogin(event) {
+        event.preventDefault();
+        const username = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
+        if (username && password) {
+            fetch(`/api/usuarios/rol?usuario=${encodeURIComponent(username)}`)
+                .then(res => res.json())
+                .then(data => {
+                    localStorage.setItem('loggedInUser', username);
+                    localStorage.setItem('admin', data.admin ? 'true' : 'false');
+                    alert(`Bienvenido, ${username}!`);
+                    location.reload();
+                })
+                .catch(() => {
+                    localStorage.setItem('loggedInUser', username);
+                    localStorage.setItem('admin', 'false');
+                    alert(`Bienvenido, ${username}!`);
+                    location.reload();
+                });
+        } else {
+            alert('Por favor, completa todos los campos.');
+        }
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+        const loggedInUser = localStorage.getItem('loggedInUser');
+        const navbar = document.querySelector('.navbar-nav');
+        if (loggedInUser) {
+            navbar.innerHTML = '';
+            const homeLink = document.createElement('li');
+            homeLink.classList.add('nav-item');
+            homeLink.innerHTML = '<a class="nav-link" href="/">Inicio</a>';
+            navbar.appendChild(homeLink);
+            const juegosLink = document.createElement('li');
+            juegosLink.classList.add('nav-item');
+            juegosLink.innerHTML = '<a class="nav-link" href="/buscar_juegos">Juegos</a>';
+            navbar.appendChild(juegosLink);
+            const adminDropdown = document.createElement('li');
+            adminDropdown.classList.add('nav-item', 'dropdown');
+            adminDropdown.innerHTML = `
+                <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Administrar
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                    <li><a class="dropdown-item" href="/productos">Productos</a></li>
+                    <li><a class="dropdown-item" href="/usuarios">Usuarios</a></li>
+                    <li><a class="dropdown-item" href="/compras">Compras</a></li>
+                    <li><a class="dropdown-item" href="/graficos">Gráficos</a></li>
+                </ul>
+            `;
+            if (localStorage.getItem('admin') === 'true') {
+                navbar.appendChild(adminDropdown);
+            }
+            const cartIcon = document.createElement('li');
+            cartIcon.classList.add('nav-item');
+            cartIcon.innerHTML = '<a class="nav-link" href="/carrito">Carrito</a>';
+            navbar.appendChild(cartIcon);
+            const userGreeting = document.createElement('li');
+            userGreeting.classList.add('nav-item');
+            userGreeting.innerHTML = `<span class="nav-link">Bienvenido, ${loggedInUser}</span>`;
+            navbar.appendChild(userGreeting);
+            const logoutButton = document.createElement('li');
+            logoutButton.classList.add('nav-item');
+            logoutButton.innerHTML = '<a class="nav-link" href="#" id="logoutButton">Cerrar Sesión</a>';
+            navbar.appendChild(logoutButton);
+            document.getElementById('logoutButton').addEventListener('click', () => {
+                localStorage.removeItem('loggedInUser');
+                localStorage.removeItem('admin');
+                alert('Has cerrado sesión.');
+                window.location.href = '/';
+            });
+        }
+    });
+    function addToCart(productName, productPrice) {
+        const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+        cartItems.push({ name: productName, price: productPrice });
+        localStorage.setItem('cart', JSON.stringify(cartItems));
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-success';
+        alertDiv.textContent = 'El producto se ha añadido al carrito satisfactoriamente';
+        document.body.prepend(alertDiv);
+        setTimeout(() => alertDiv.remove(), 3000);
+    }
+    document.getElementById('buyButton').addEventListener('click', (event) => {
+        event.preventDefault();
+        const loggedInUser = localStorage.getItem('loggedInUser');
+        const productName = document.querySelector('h2').textContent;
+        const productPrice = parseFloat(document.querySelector('.card-text span').textContent);
+        if (loggedInUser) {
+            addToCart(productName, productPrice);
+        } else {
+            const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+            loginModal.show();
+        }
+    });
+    const registerForm = document.querySelector('#registerModal form');
+    if (registerForm) {
+        registerForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const usuario = document.getElementById('registerUsername').value;
+            const nombre = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            fetch('/registrarUsuario', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `usuario=${encodeURIComponent(usuario)}&nombre=${encodeURIComponent(nombre)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+            }).then(res => {
+                if (res.ok) {
+                    alert('Usuario registrado correctamente.');
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
+                    if (modal) modal.hide();
+                } else {
+                    alert('Error al registrar usuario.');
+                }
+            });
+        });
+    }
+</script>
+</body>
+</html>

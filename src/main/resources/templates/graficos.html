@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gráficos de la Tienda</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/}" href="/">Pixel Play</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="#navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/}" href="/">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/buscar_juegos}" href="/buscar_juegos">Juegos</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Administrar
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                            <li><a class="dropdown-item" th:href="@{/productos}" href="/productos">Productos</a></li>
+                            <li><a class="dropdown-item" th:href="@{/usuarios}" href="/usuarios">Usuarios</a></li>
+                            <li><a class="dropdown-item" th:href="@{/compras}" href="/compras">Compras</a></li>
+                            <li><a class="dropdown-item" th:href="@{/graficos}" href="/graficos">Gráficos</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Iniciar Sesión</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container my-5">
+        <h2 class="text-center">Gráficos de la Tienda</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <h5>Productos más vendidos</h5>
+                <canvas id="barChart"></canvas>
+            </div>
+            <div class="col-md-4">
+                <h5>Ventas por mes</h5>
+                <canvas id="lineChart"></canvas>
+            </div>
+            <div class="col-md-4">
+                <h5>Stock por categoría</h5>
+                <canvas id="pieChart"></canvas>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-6">
+                <h5>Reseñas por producto</h5>
+                <canvas id="reviewsChart"></canvas>
+            </div>
+            <div class="col-md-6">
+                <h5>Ventas y categorías</h5>
+                <canvas id="ventasCategoriaChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Datos ficticios para los gráficos
+        const productos = ["Persona 3 Reload", "Elden Ring", "Super Mario Bros Wonder"];
+        const ventas = [12, 19, 7];
+        const meses = ["Ene", "Feb", "Mar"];
+        const ventasMes = [5, 10, 8];
+        const categorias = ["RPG", "Acción", "Aventura"];
+        const stock = [20, 15, 10];
+
+        new Chart(document.getElementById('barChart'), {
+            type: 'bar',
+            data: {
+                labels: productos,
+                datasets: [{
+                    label: 'Ventas',
+                    data: ventas,
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)'
+                }]
+            }
+        });
+        new Chart(document.getElementById('lineChart'), {
+            type: 'line',
+            data: {
+                labels: meses,
+                datasets: [{
+                    label: 'Ventas por mes',
+                    data: ventasMes,
+                    borderColor: 'rgba(255, 99, 132, 0.7)',
+                    fill: false
+                }]
+            }
+        });
+        new Chart(document.getElementById('pieChart'), {
+            type: 'pie',
+            data: {
+                labels: categorias,
+                datasets: [{
+                    label: 'Stock',
+                    data: stock,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.7)',
+                        'rgba(54, 162, 235, 0.7)',
+                        'rgba(255, 206, 86, 0.7)'
+                    ]
+                }]
+            }
+        });
+
+        // Más datos ficticios para los otros gráficos
+        const productosGraficos = ["Persona 3 Reload", "Elden Ring", "Super Mario Bros Wonder"];
+        const reseñasGraficos = [4.5, 4.8, 4.2];
+        const ventasGraficos = [12, 19, 7];
+        const categoriasGraficos = ["RPG", "Acción", "Aventura"];
+        const ventasPorCategoriaGraficos = [15, 10, 13];
+
+        new Chart(document.getElementById('reviewsChart'), {
+            type: 'bar',
+            data: {
+                labels: productosGraficos,
+                datasets: [{
+                    label: 'Promedio de Reseñas',
+                    data: reseñasGraficos,
+                    backgroundColor: 'rgba(255, 206, 86, 0.7)'
+                }]
+            }
+        });
+
+        new Chart(document.getElementById('ventasCategoriaChart'), {
+            type: 'bar',
+            data: {
+                labels: productosGraficos,
+                datasets: [
+                    {
+                        label: 'Ventas',
+                        data: ventasGraficos,
+                        backgroundColor: 'rgba(54, 162, 235, 0.7)'
+                    },
+                    {
+                        label: 'Ventas por categoría',
+                        data: ventasPorCategoriaGraficos,
+                        backgroundColor: 'rgba(255, 99, 132, 0.7)'
+                    }
+                ]
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

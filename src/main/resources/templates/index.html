@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Inicio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    
+
+    <video autoplay loop muted playsinline class="video-background">
+        <source src="elementos/fondo.mp4" type="video/mp4">
+        Tu navegador no soporta la reproducción de videos.
+    </video>
+
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/}" href="/">Pixel Play</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/}" href="/">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/buscar_juegos}" href="/buscar_juegos">Juegos</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{#contacto}" href="#contacto">Contacto</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Administrar
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                            <li><a class="dropdown-item" th:href="@{/productos}" href="/productos">Productos</a></li>
+                            <li><a class="dropdown-item" th:href="@{/usuarios}" href="/usuarios">Usuarios</a></li>
+                            <li><a class="dropdown-item" th:href="@{/compras}" href="/compras">Compras</a></li>
+                            <li><a class="dropdown-item" th:href="@{/graficos}" href="/graficos">Gráficos</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Iniciar Sesión</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4500">
+
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <a th:href="@{/buscar_juegos(search='Nintendo')}" href="/buscar_juegos?search=Nintendo">
+                    <img src="https://i.kym-cdn.com/photos/images/original/002/609/880/cd9.gif" class="d-block w-100" alt="Imagen 1">
+                </a>
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Infinidad de Juegos</h5>
+                    <p>Descubre el catalogo de juegos de Nintendo que tenemos para ofrecer</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <a th:href="@{/minecraft}" href="/minecraft">
+                    <img src="https://media2.giphy.com/media/r8GMmlV8qGrfZ3txfX/giphy.gif?cid=6c09b952yzj7u8myw2x8kw05or03xb6yr4duik3rhtefx7hp&ep=v1_gifs_search&rid=giphy.gif&ct=g" class="d-block w-100" alt="Imagen 2">
+                </a>
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Horas de Diversión</h5>
+                    <p>Mira la oferta que tenemos para ofrecerte por la Pelicula de Minecraft</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <a th:href="@{/buscar_juegos(search='Playstation')}" href="/buscar_juegos?search=Playstation">
+                    <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExaGJ4ZnZ3amNqdm93YnNieGEzaG03ZTExaGR5NzJocGxtMWM2bHczaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/67ThVTcBxs0DQkDgTZ/giphy.gif" class="d-block w-100" alt="Imagen 3">
+                </a>
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Excelentes Graficos</h5>
+                    <p>Disfruta con nuestro catalogo de juegos de Playstation 5</p>
+                </div>
+            </div>
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+        </button>
+    </div>
+
+
+    <div class="container my-5">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <video autoplay loop muted playsinline class="img-fluid" style="box-shadow: 0 0 15px 5px rgba(0,0,0,0.5);">
+                    <source th:src="@{/elementos/gameplay.mp4}" src="/elementos/gameplay.mp4" type="video/mp4">
+                    Tu navegador no soporta la reproducción de videos.
+                </video>
+            </div>
+            <div class="col-md-6 text-center">
+                <h2>Explora Nuestros Videojuegos</h2>
+                <p>Descubre todos los videojuegos disponibles en nuestra plataforma.</p>
+                <a href="buscar_juegos.html" class="btn btn-primary">Ir al Buscador</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="reviewsCarousel" class="carousel slide my-5" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Usuario 1</h5>
+                                <p class="card-text">"Este juego es increíble, me encantó la jugabilidad y los gráficos."</p>
+                                <p class="card-text">Calificación: ⭐⭐⭐⭐⭐</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Usuario 2</h5>
+                                <p class="card-text">"Un juego entretenido, pero podría mejorar en algunos aspectos."</p>
+                                <p class="card-text">Calificación: ⭐⭐⭐⭐</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Usuario 3</h5>
+                                <p class="card-text">"No me gustó mucho, esperaba más contenido."</p>
+                                <p class="card-text">Calificación: ⭐⭐⭐</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Usuario 4</h5>
+                                <p class="card-text">"Un juego excelente para pasar el tiempo con amigos."</p>
+                                <p class="card-text">Calificación: ⭐⭐⭐⭐⭐</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Usuario 5</h5>
+                                <p class="card-text">"Me gustó mucho, pero tiene algunos bugs que deberían arreglar."</p>
+                                <p class="card-text">Calificación: ⭐⭐⭐⭐</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Usuario 6</h5>
+                                <p class="card-text">"No lo recomiendo, no cumplió con mis expectativas."</p>
+                                <p class="card-text">Calificación: ⭐⭐</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#reviewsCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#reviewsCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+        </button>
+    </div>
+
+    <div class="container my-5">
+        <h2 class="text-center">Lo más vendidos</h2>
+        <p class="text-center">Disfruta con los juegos del momento</p>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="https://rimage.ripley.com.pe/home.ripley/Attachment/MKP/2239/PMP20000250828/full_image-1.jpeg" class="card-img-top" alt="Persona 3 Reload">
+                    <div class="card-body">
+                        <h5 class="card-title">Persona 3 Reload</h5>
+                        <span class="badge bg-secondary">RPG</span>
+                        <span class="badge bg-primary">PlayStation</span>
+                        <p class="card-text">Precio: $50</p>
+                        <a href="#" class="btn btn-primary">Ver más</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="https://m.media-amazon.com/images/I/81mtrRvlFqL._AC_SL1500_.jpg" class="card-img-top" alt="Elden Ring">
+                    <div class="card-body">
+                        <h5 class="card-title">Elden Ring</h5>
+                        <span class="badge bg-secondary">RPG</span>
+                        <span class="badge bg-primary">Playstation</span>
+                        <p class="card-text">Precio: $59.99</p>
+                        <a href="#" class="btn btn-primary">Ver más</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="https://m.media-amazon.com/images/I/71BWFLW-uxL._SL1361_.jpg" class="card-img-top" alt="Spiderman: Miles Morales">
+                    <div class="card-body">
+                        <h5 class="card-title">Spiderman: Miles Morales</h5>
+                        <span class="badge bg-danger">Acción</span>
+                        <span class="badge bg-primary">PlayStation</span>
+                        <p class="card-text">Precio: $69.99</p>
+                        <a href="#" class="btn btn-primary">Ver más</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Iniciar Sesión</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form onsubmit="handleLogin(event)">
+                        <div class="mb-3">
+                            <label for="loginUsername" class="form-label">Usuario</label>
+                            <input type="text" class="form-control" id="loginUsername" placeholder="Tu Usuario">
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="loginPassword" placeholder="Contraseña">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                    </form>
+                    <div class="mt-3 text-center">
+                        <p>¿No tienes una cuenta? <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Regístrate aquí</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerModalLabel">Registrarse</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="registerUsername" class="form-label">Usuario</label>
+                            <input type="text" class="form-control" id="registerUsername" placeholder="Usuario">
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerName" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="registerName" placeholder="Nombre Completo">
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerEmail" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="registerEmail" placeholder="nombre@ejemplo.com">
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPassword" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="registerPassword" placeholder="Contraseña">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Registrarse</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-5">
+        <h2 class="text-center">Contáctanos</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Reseñas y Recomendaciones</h3>
+                <form>
+                    <div class="mb-3">
+                        <label for="feedbackName" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="feedbackName" placeholder="Tu Nombre">
+                    </div>
+                    <div class="mb-3">
+                        <label for="feedbackEmail" class="form-label">Correo Electrónico</label>
+                        <input type="email" class="form-control" id="feedbackEmail" placeholder="nombre@ejemplo.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="feedbackMessage" class="form-label">Mensaje</label>
+                        <textarea class="form-control" id="feedbackMessage" rows="4" placeholder="Escribe tus quejas o recomendaciones"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                </form>
+            </div>
+
+            <div class="col-md-6">
+                <h3>Promociona tu Juego</h3>
+                <form>
+                    <div class="mb-3">
+                        <label for="promoName" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="promoName" placeholder="Tu Nombre">
+                    </div>
+                    <div class="mb-3">
+                        <label for="promoEmail" class="form-label">Correo Electrónico</label>
+                        <input type="email" class="form-control" id="promoEmail" placeholder="nombre@ejemplo.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="promoGameDetails" class="form-label">Detalles del Juego</label>
+                        <textarea class="form-control" id="promoGameDetails" rows="4" placeholder="Describe tu juego y cómo deseas promocionarlo"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3">
+        <p>Contáctanos por WhatsApp: <a href="https://wa.me/1234567890" class="text-white">123-456-7890</a></p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            const comprasMenu = document.querySelector('a[href="/compras"]')?.parentElement;
+            if (comprasMenu) {
+                comprasMenu.style.display = loggedInUser ? '' : 'none';
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            const navbar = document.querySelector('.navbar-nav');
+
+            if (loggedInUser) {
+                navbar.innerHTML = '';
+
+                const homeLink = document.createElement('li');
+                homeLink.classList.add('nav-item');
+                homeLink.innerHTML = '<a class="nav-link" href="/">Inicio</a>';
+                navbar.appendChild(homeLink);
+
+                const juegosLink = document.createElement('li');
+                juegosLink.classList.add('nav-item');
+                juegosLink.innerHTML = '<a class="nav-link" href="/buscar_juegos">Juegos</a>';
+                navbar.appendChild(juegosLink);
+
+                const cartIcon = document.createElement('li');
+                cartIcon.classList.add('nav-item');
+                cartIcon.innerHTML = '<a class="nav-link" href="/carrito">Carrito</a>';
+                navbar.appendChild(cartIcon);
+
+                const userGreeting = document.createElement('li');
+                userGreeting.classList.add('nav-item');
+                userGreeting.innerHTML = `<span class="nav-link">Bienvenido, ${loggedInUser}</span>`;
+                navbar.appendChild(userGreeting);
+
+                const logoutButton = document.createElement('li');
+                logoutButton.classList.add('nav-item');
+                logoutButton.innerHTML = '<a class="nav-link" href="#" id="logoutButton">Cerrar Sesión</a>';
+                navbar.appendChild(logoutButton);
+
+                document.getElementById('logoutButton').addEventListener('click', () => {
+                    localStorage.removeItem('loggedInUser');
+                    alert('Has cerrado sesión.');
+                    location.reload();
+                });
+            }
+        });
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (username && password) {
+                fetch(`/api/usuarios/rol?usuario=${encodeURIComponent(username)}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        localStorage.setItem('loggedInUser', username);
+                        localStorage.setItem('admin', data.admin ? 'true' : 'false');
+                        alert(`Bienvenido, ${username}!`);
+                        location.reload();
+                    })
+                    .catch(() => {
+                        localStorage.setItem('loggedInUser', username);
+                        localStorage.setItem('admin', 'false');
+                        alert(`Bienvenido, ${username}!`);
+                        location.reload();
+                    });
+            } else {
+                alert('Por favor, completa todos los campos.');
+            }
+        }
+
+        const registerForm = document.querySelector('#registerModal form');
+        if (registerForm) {
+            registerForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const usuario = document.getElementById('registerUsername').value;
+                const nombre = document.getElementById('registerName').value;
+                const email = document.getElementById('registerEmail').value;
+                const password = document.getElementById('registerPassword').value;
+                fetch('/registrarUsuario', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `usuario=${encodeURIComponent(usuario)}&nombre=${encodeURIComponent(nombre)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+                }).then(res => {
+                    if (res.ok) {
+                        alert('Usuario registrado correctamente.');
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
+                        if (modal) modal.hide();
+                    } else {
+                        alert('Error al registrar usuario.');
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+<!--Observaciones de otros grupos-->
+<!-- cambiar el color de la pagina, editar la navbar con el icono de la empresa-->
+<!-- cambiar el footer, añadirle mas informacion de la pagina-->
+</html>
