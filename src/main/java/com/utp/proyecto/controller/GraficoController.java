@@ -1,11 +1,3 @@
-/*
-GraficoController es un controlador de Spring MVC encargado de manejar la ruta "/graficos".
-Su función principal es preparar y enviar datos estadísticos (productos, reseñas, ventas, categorías)
-al modelo para que la vista "graficos.html" pueda mostrar gráficos dinámicos.
-  
-Actualmente, este controlador no aporta funcionalidad
-
-*/
 package com.utp.proyecto.controller;
 
 import com.utp.proyecto.model.Producto;
